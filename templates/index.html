@@ -1,0 +1,231 @@
+{% extends "layout.html" %}
+{% block body %}
+<div id='over'></div>    
+<div id="layout"><img src="{{ url_for('static', filename='images/loading.gif') }}" /></div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <table class="table table-bordered table-condensed table-striped">
+                <caption>Machine Info</caption>
+                <tr>
+                    <th>Machine</th>
+                    <td  class="text-right" data-bind="text: machineInfo.machine_name"></td>
+                </tr>
+                <!-- ko if: machineInfo.system_version -->
+                    <tr>
+                        <th>System</th>
+                        <td  class="text-right" data-bind="text: machineInfo.system_version"></td>
+                    </tr>
+                <!-- /ko -->
+                <tr>
+                    <th>Up Time</th>
+                    <td  class="text-right" data-bind="text: machineInfo.up_time"></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-2">
+            <table class="table table-bordered table-condensed table-striped">
+                <caption>CPU Info</caption>
+                <tr>
+                    <th>Physical core</th>
+                    <td  class="text-right" data-bind="text: cpuInfo.physical_core"></td>
+                </tr>
+                <tr>
+                    <th>Logical core</th>
+                    <td  class="text-right" data-bind="text: cpuInfo.logical_core"></td>
+                </tr>
+                <!-- ko foreach: {data: cpuInfo.cpu_percent, as: 'percentInfo'} -->
+                    <tr>
+                        <th>core <span data-bind="text: percentInfo.core"></span></th>
+                        <td class="text-right"><span data-bind="text: percentInfo.percent"></span>%</td>
+                    </tr>
+                <!-- /ko -->
+            </table>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-bordered table-condensed table-striped">
+                <caption>Virtual Memory Info</caption>
+                <tr>
+                    <th>virtual_memory_total</th>
+                    <td data-bind="text: memoryInfo.virtual_memory_total"></td>
+                 </tr>
+                 <tr>
+                    <th>virtual_memory_used</th>
+                    <td data-bind="text: memoryInfo.virtual_memory_used"></td>
+                 </tr>
+                 <tr>
+                    <th>virtual_memory_free</th>
+                    <td data-bind="text: memoryInfo.virtual_memory_free"></td>
+                </tr>
+                <tr>
+                    <th>virtual_memory_percent</th>
+                    <td><span data-bind="text: memoryInfo.virtual_memory_percent"></span>%</td>
+                 </tr>
+            </table>
+        </div>
+        <div class="col-md-3">
+            <table class="table table-bordered table-condensed table-striped">
+                <caption>Swap Memory Info</caption>
+                <tr>
+                    <th>swap_memory_total</th>
+                    <td data-bind="text: memoryInfo.swap_memory_total"></td>
+                </tr>
+                <tr>
+                    <th>swap_memory_used</th>
+                    <td data-bind="text: memoryInfo.swap_memory_used"></td>
+                </tr>
+                <tr>
+                    <th>swap_memory_free</th>
+                    <td data-bind="text: memoryInfo.swap_memory_free"></td>
+                </tr>
+                <tr>
+                    <th>swap_memory_percent</th>
+                    <td><span data-bind="text: memoryInfo.swap_memory_percent"></span>%</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-bordered table-condensed table-striped">
+                <caption>Disk Info</caption>
+                <thead><tr>
+                    <th>device</th>
+                    <th>mountpoint</th>
+                    <th>fstype</th>
+                    <th>opts</th>
+                    <th>total</th>
+                    <th>used</th>
+                    <th>free</th>
+                    <th>percent</th>
+                </tr></thead>
+                <tbody data-bind="foreach: {data: diskInfo.partitions, as: 'partition'}">
+                    <tr>
+                        <td data-bind="text: partition.device"></td>
+                        <td data-bind="text: partition.mountpoint"></td>
+                        <td data-bind="text: partition.fstype"></td>
+                        <td data-bind="text: partition.opts"></td>
+                        <td data-bind="text: partition.total"></td>
+                        <td data-bind="text: partition.used"></td>
+                        <td data-bind="text: partition.free"></td>
+                        <td><span data-bind="text: partition.percent"></span>%</td>
+                    </tr>    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-bordered table-condensed table-striped">
+                <caption>Disk IO</caption>
+                <thead><tr>
+                    <th>disk</th>
+                    <th>read_count</th>
+                    <th>write_count</th>
+                    <th>read_bytes</th>
+                    <th>write_bytes</th>
+                    <th>read_time</th>
+                    <th>write_time</th>
+                </tr></thead>
+                <tbody data-bind="foreach: {data: diskIOCounters.diskIOs, as: 'diskio'}">
+                    <tr>
+                        <td data-bind="text: diskio.disk"></td>
+                        <td data-bind="text: diskio.read_count"></td>
+                        <td data-bind="text: diskio.write_count"></td>
+                        <td data-bind="text: diskio.read_bytes"></td>
+                        <td data-bind="text: diskio.write_bytes"></td>
+                        <td data-bind="text: diskio.read_time"></td>
+                        <td data-bind="text: diskio.write_time"></td>
+                    </tr>    
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table table-bordered table-condensed table-striped">
+                <caption>Process Info</caption>
+                <thead><tr>
+                    <th>pid</th>
+                    <th>name</th>
+                    <th>ppid</th>
+                    <th>username</th>
+                    <th>create_time</th>
+                    <th>cpu_percent</th>
+                    <th>memory_percent</th>
+                    <th>read_count</th>
+                    <th>write_count</th>
+                    <th>read_size</th>
+                    <th>write_size</th>
+                </tr></thead>
+                <tbody data-bind="foreach: {data: processInfo.processes, as: 'processe'}">
+                    <tr>
+                        <td data-bind="text: processe.pid"></td>
+                        <td data-bind="text: processe.name"></td>
+                        <td data-bind="text: processe.ppid"></td>
+                        <td data-bind="text: processe.username"></td>
+                        <td data-bind="text: processe.create_time"></td>
+                        <td><span data-bind="text: processe.cpu_percent"></span>%</td>
+                        <td data-bind="text: processe.memory_percent"></td>
+                        <td data-bind="text: processe.read_count"></td>
+                        <td data-bind="text: processe.write_count"></td>
+                        <td data-bind="text: processe.read_size"></td>
+                        <td data-bind="text: processe.write_size"></td>
+                    </tr>    
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    
+</div>
+
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/knockout/3.4.0/knockout-min.js"></script>
+<script src="//cdn.bootcss.com/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//cdn.bootcss.com/flot/0.8.3/jquery.flot.min.js"></script>
+
+
+<script type="text/javascript">
+    $(function(){
+        var systemInfoViewModel;
+        var initBinding = true;
+     
+        function longPolling(){
+            setTimeout(function(){
+                $.ajax({
+                    url: "{{ url_for('system_info') }}",
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                    },
+                    success: function (result, textStatus) {
+
+                        if(!initBinding){
+                             ko.mapping.fromJS(result, systemInfoViewModel);
+                        }
+                        if(initBinding){
+                            systemInfoViewModel = ko.mapping.fromJS(result);
+                            ko.applyBindings(systemInfoViewModel); 
+                            initBinding = false;
+                            $('#over').hide();
+                            $('#layout').hide();
+                        }
+                        
+                    },
+                    complete: longPolling,
+                });
+            }, 500);
+        }
+          
+        // use long polling to get system info from server
+        longPolling();
+        
+        
+        
+        
+        
+    })
+    
+</script>
+{% endblock %}
