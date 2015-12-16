@@ -4,7 +4,7 @@
 <div id="layout"><img src="{{ url_for('static', filename='images/loading.gif') }}" /></div>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2">
+        <div class="col-md-3">
             <table class="table table-bordered table-condensed table-striped">
                 <caption>Machine Info</caption>
                 <tr>
@@ -85,8 +85,10 @@
             </table>
         </div>
     </div>
+    <div class="row diagram-row">
+    </div>
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-11">
             <table class="table table-bordered table-condensed table-striped">
                 <caption>Disk Info</caption>
                 <thead><tr>
@@ -115,7 +117,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-11">
             <table class="table table-bordered table-condensed table-striped">
                 <caption>Disk IO</caption>
                 <thead><tr>
@@ -142,7 +144,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-11">
             <table class="table table-bordered table-condensed table-striped">
                 <caption>Process Info</caption>
                 <thead><tr>
@@ -177,7 +179,6 @@
         </div>
     </div>
 
-    
 </div>
 
 <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
@@ -185,47 +186,5 @@
 <script src="//cdn.bootcss.com/knockout.mapping/2.4.1/knockout.mapping.min.js"></script>
 <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script src="//cdn.bootcss.com/flot/0.8.3/jquery.flot.min.js"></script>
-
-
-<script type="text/javascript">
-    $(function(){
-        var systemInfoViewModel;
-        var initBinding = true;
-     
-        function longPolling(){
-            setTimeout(function(){
-                $.ajax({
-                    url: "{{ url_for('system_info') }}",
-                    error: function (XMLHttpRequest, textStatus, errorThrown) {
-
-                    },
-                    success: function (result, textStatus) {
-
-                        if(!initBinding){
-                             ko.mapping.fromJS(result, systemInfoViewModel);
-                        }
-                        if(initBinding){
-                            systemInfoViewModel = ko.mapping.fromJS(result);
-                            ko.applyBindings(systemInfoViewModel); 
-                            initBinding = false;
-                            $('#over').hide();
-                            $('#layout').hide();
-                        }
-                        
-                    },
-                    complete: longPolling,
-                });
-            }, 500);
-        }
-          
-        // use long polling to get system info from server
-        longPolling();
-        
-        
-        
-        
-        
-    })
-    
-</script>
+<script src="{{ url_for('static', filename='javascript/main.js') }}"></script>
 {% endblock %}
